@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const cors = require('cors');  // Importando o pacote CORS
 
 const router = express.Router();
 
@@ -14,6 +15,15 @@ const UserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 const User = mongoose.model('User', UserSchema);
+
+const corsOptions = {
+    origin: '*',  
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+router.use(cors(corsOptions)); 
+
 
 router.post('/create-admin', async (req, res) => {
     try {
@@ -62,7 +72,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
+// Rota para obter dados do admin
 router.get('/admin/:username', async (req, res) => {
     try {
         const admin = await User.findOne({ username: req.params.username, role: 'admin' });
@@ -73,10 +83,8 @@ router.get('/admin/:username', async (req, res) => {
         
         res.json(admin);
     } catch (err) {
-    
         res.status(500).json({ message: 'Erro no servidor', error: err.message });
     }
 });
-
 
 module.exports = router;
