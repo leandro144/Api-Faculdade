@@ -8,7 +8,7 @@ const router = express.Router();
 const corsOptions = {
     origin: '*', 
     methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
 };
 
 router.use(cors(corsOptions));
