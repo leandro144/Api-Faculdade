@@ -1,7 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const Diploma = require('../models/Diploma');
 const router = express.Router();
+
+// Middleware CORS
+const corsOptions = {
+    origin: '*', 
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+};
+
+router.use(cors(corsOptions));
 
 // Middleware para autenticação
 const auth = (req, res, next) => {
@@ -35,16 +45,15 @@ router.post('/add', auth, async (req, res) => {
     }
 });
 
-
 // Consultar diploma
 router.get('/:code', async (req, res) => {
     try {
         const diploma = await Diploma.findOne({ code: req.params.code });
-        if (!diploma) return res.status(404).json({ message: 'Diploma not found' });
+        if (!diploma) return res.status(404).json({ message: 'Diploma não encontrado' });
 
         res.json(diploma);
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Erro no servidor' });
     }
 });
 
